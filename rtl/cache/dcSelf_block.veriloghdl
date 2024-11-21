@@ -342,8 +342,8 @@ module dcache1_way(
   write_insert,
   write_insertExclusive,
   write_insertDirty,
+  insert_addr_A,
   write_data,
-  write_dataPTR,
   err_tag,
   recent_in,
   recent_out,
@@ -577,26 +577,7 @@ module dcache1_way(
   reg init_dirty;
   reg [5:0] initCount;
   wire [5:0] initCount_d;
-  //verilator lint_off WIDTH
-  dc1_xbit pbit_mod(
-  .clk(clk),
-  .rst(rst),
-  .read0_clkEn(1'b1),.read0_addrO({read_addrO0[6:0],read_begin0[4:1]}),
-  .read0_addrE({read_addrE0[6:0],read_begin0[4:1]}),.read0_odd(read_odd0),.read0_pbit(read0_pbitP),
-  .read1_clkEn(1'b1),.read1_addrO({read_addrO1[6:0],read_begin1[4:1]}),
-  .read1_addrE({read_addrE1[6:0],read_begin1[4:1]}),.read1_odd(read_odd1),.read1_pbit(read1_pbitP),
-  .read2_clkEn(1'b1),.read2_addrO({read_addrO2[6:0],read_begin2[4:1]}),
-  .read2_addrE({read_addrE2[6:0],read_begin2[4:1]}),.read2_odd(read_odd2),.read2_pbit(read2_pbitP),
-  .read3_clkEn(1'b1),.read3_addrO({read_addrO3[6:0],read_begin3[4:1]}),
-  .read3_addrE({read_addrE3[6:0],read_begin3[4:1]}),.read3_odd(read_odd3),.read3_pbit(read3_pbitP),
-  .write0_clkEn(1'b1),.write0_addrO({write_addrO0[6:0],write_begin0[4:1]}),
-  .write0_addrE({write_addrE0[6:0],write_begin0[4:1]}),.write0_odd(write_odd0),.write0_pbit(write_pbit0),
-  .write0_d128(write_d128_0),
-  .write1_clkEn(1'b1),.write1_addrO({write_addrO1[6:0],write_begin1[4:1]}),
-  .write1_addrE({write_addrE1[6:0],write_begin1[4:1]}),.write1_odd(write_odd1),.write1_pbit(write_pbit1),
-  .write1_d128(write_d128_1),
-  .write_ins(ins_hit),.write_data(write_dataPTR));
-  //verilator lint_on WIDTH
+  
   generate
     genvar b,r,w;
     if (~INDEX[0]) begin
@@ -699,7 +680,7 @@ module dcache1_way(
 /* verilator lint_on WIDTH */
        end
     end
-    for (r=0;r<4;r=r+1) begin : tagR_gen
+    for (r=0;r<5;r=r+1) begin : tagR_gen
         if (r>0)
         dcache1_tag #(INDEX) tagR_mod(
         .clk(clk),
@@ -748,13 +729,13 @@ module dcache1_way(
         );  
     end
 
-    for (w=0;w<2;w=w+1) begin : tagW_gen
+    for (w=0;w<12;w=w+1) begin : tagW_gen
         dcache1_tag #(INDEX) tagW_mod(
         .clk(clk),
         .rst(rst),
-        .read_clkEn(write_clkEn[w] | write_insert),
-        .read_en(write_clkEn[w]),
-        .read_addrOdd(write_addrO[w]),.read_addrEven(write_addrE[w]),
+        .read_clkEn(write_clkEn0[w] | write_insert),
+        .read_en(write_clkEn0[w]),
+        .read_addrOdd(write_addrO0[w]),.read_addrEven(write_addrE0[w]),
         .read_odd(write_odd[w]), .read_split(write_split[w]), .read_invl(read_invalidate),
         .read_exclOut0(write_dupl[w][0]),.read_exclOut1(write_dupl[w][1]), 
         .read_hitL_odd(write_hitOL[w]),.read_hitL_even(write_hitEL[w]),
@@ -783,16 +764,15 @@ module dcache1_way(
   assign read_addrO[1]=read_addrO1;
   assign read_addrO[2]=read_addrO2;
   assign read_addrO[3]=read_addrO3;
+  assign read_addrO[4]=ins_addr_A>>1;
 
   assign read_addrE[0]=read_addrE0;
   assign read_addrE[1]=read_addrE1;
   assign read_addrE[2]=read_addrE2;
   assign read_addrE[3]=read_addrE3;
- 
-  assign write_addrO[0]=write_addrO0;
-  assign write_addrE[0]=write_addrE0;
-  assign write_addrO[1]=write_addrO1;
-  assign write_addrE[1]=write_addrE1;
+  assign read_addrE[4]=read_addrO[4];
+
+  
   
   assign err_tag=errH|errL;  
 
