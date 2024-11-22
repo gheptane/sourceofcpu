@@ -1850,7 +1850,8 @@ module rs_buf(
   FU0Hit,FU1Hit,FU2Hit,FU3Hit,
   new_thread,
 // wires to store new values in a buffer
-  newABSNeeded0,newRsSelect0,newPort0,
+  newABSNeeded0,newRsSelect0,newPort0,newPincussion0,
+  pincussion,
 // wires to get values out of buffer
   outRsSelect0,portReady0,outDataEn0,outThread0,
   fuFwdA,fuFwdB,
@@ -1880,6 +1881,8 @@ module rs_buf(
   input [2:0][2:0] newABSNeeded0;
   input [2:0] newRsSelect0;
   input [2:0] [3:0] newPort0;
+  input [2:0] [8:0] newPincussion0;
+  input [8:0] pincussion;
 
 // output data to functional units
 
@@ -1909,6 +1912,9 @@ module rs_buf(
   wire [2:0] port0_en;
   wire [2:0] port0_q;
 
+  wire [8:0] pinc_d;
+  wire [8:0] pinc_en;
+  wire [8:0] pinc_q;
 
   wire [2:0] [REG_WIDTH-1:0] regA_q;
   wire [2:0] [REG_WIDTH-1:0] regA_d;
@@ -1969,6 +1975,8 @@ module rs_buf(
           assign dataAPending_d[regno]=newRsSelectAny ? dataAPending_new[regno] & ~nonDataRst0 & stall_n & ~dataAPending_gather[regno]:
                (~dataAPending_gather[regno] & dataAPending_q[regno] || unCheckA) & ~nonDataRst0;
           //here regno is "new" port index 
+          assing pinc_d=newRsSelect0[regno] ? newPincussion0[regno] : 'z;
+          assign pinc_en=newRsSelectAny;
           assign portNo_new=(newRsSelect0[regno] & ~stall) ? newPort0[regno] : 4'bz;
           for(subloop=0;subloop<3;subloop=subloop+1) begin : sub_gen
               assign dataABSPending_new[regno]=(newRsSelect0[subloop] & ~stall) ? newABSNeeded0[regno][subloop] : 1'bz;
