@@ -140,6 +140,8 @@ module dcache1_tag(
   write_recent_in,
   write_wen,
   write_hit,
+  insenA,
+  insenA_here,
   wb_addr,
   wb_valid,
   puke_en,puke_addr
@@ -298,7 +300,7 @@ module dcache1_tag(
   assign tag_same_data[`dc1Tag_exclusive]=read_odd_reg ? tagR1_exclusive : tagR0_exclusive;
   assign tag_same_data[`dc1Tag_parity]=^tag_same_data[DATA_WIDTH-2:0];
   
-  assign write_hit=(write_recent_in) ? write_hit2 : write_hit1;
+  assign write_hit=insenA_reg2 ? insenA_here_reg2 : (write_recent_in) ? write_hit2 : write_hit1;
   assign write_hit1=write_rand[2:0]==INDEX && write_wen_reg; 
   assign write_hit2=write_rand[5:3]==INDEX && write_wen_reg; 
   
@@ -329,12 +331,20 @@ module dcache1_tag(
           read_odd_reg<=1'b0;
           read_en_reg<=1'b0;
           read_split_reg<=1'b0;
+          insenA_reg<=0;
+          insenA_reg2<=0;
+          insenA_here_reg<=1'b0;
+          insenA_here_reg2<=1'b0;
       end else if (read_clkEn) begin
           read_addrOdd_reg<=read_addrOdd;
           read_addrEven_reg<=read_addrEven;
           read_odd_reg<=read_odd;
           read_split_reg<=read_split;
           read_en_reg<=read_en;
+          insenA_reg<=insenA;
+          insenA_reg2<=insenA_reg & hit_any;
+          insenA_here_reg<=insenA_here;
+          insenA_here_reg2<=insenA_here_reg;
       end else begin
           read_en_reg<=1'b0;
       end
