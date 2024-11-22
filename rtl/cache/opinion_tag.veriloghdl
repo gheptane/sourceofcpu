@@ -108,6 +108,8 @@ module ccTag(
   hitNRU,hitNRU_in,
   hitNRU_reg,
   write_hit,
+  insertA,
+  insertA_here,
   write_expun_addr,
   write_exp_en,
   init
@@ -201,7 +203,7 @@ module ccTag(
 
   LFSR16_6 #(16'hfead) pp_mod(clk,rst,POOG);
 
-  assign write_hit=(write_wen_reg && read_NRUw==POOG[2:0]) || (invalidate_reg && read_dataW[`cc1Tag_paddr]==write_phys_addr_reg && read_dataW[`cc1Tag_valid]);
+  assign write_hit=insertA_reg2 ? insertA_here_reg2 : (write_wen_reg && read_NRUw==POOG[2:0]) || (invalidate_reg && read_dataW[`cc1Tag_paddr]==write_phys_addr_reg && read_dataW[`cc1Tag_valid]);
   ccTag_ram ram_mod(
   .clk(clk),
   .rst(rst),
