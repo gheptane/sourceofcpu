@@ -1154,7 +1154,7 @@ jupd0_en,jupdt0_en,jupd0_ght_en,jupd0_ght2_en,jupd0_addr,jupd0_baddr,jupd0_sc,ju
   
   assign mlb_match=mlb_hit_reg3;
 
-  assign IP_phys={mlb_data[`cmlbData_phys],cc_read_IP[14:0]};
+  assign IP_phys={mlb_data[`cmlbData_phys],cc_read_IP[15:0]};
 
   assign req_addr=req_en0 ? {mlb_phys_reg,cc_read_IP_reg4[13:7]} : 38'bz;
   assign req_slot=req_en0 ? {BUS_ID,2'b10,miss_slot} : 10'bz;
