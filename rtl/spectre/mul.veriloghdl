@@ -28,6 +28,7 @@ module addrcalcsec_mul(
   wire [7:0] oldhi;
   wire [43:0] BB;
   wire [31:0] dummy;
+  wire [37:0] dummy2;
 
   assign {BB,dummy}<={31'b0,A[`ptr_hi],5'h1f,32'hffff_ffff}<<A[`ptr_exp];
 
@@ -36,9 +37,11 @@ module addrcalcsec_mul(
 
   adder #(7) add_mod(low[6:0],B[6:0],hi,1'b0,1'b1,C,,,);
 
-  adder #(44) dec_mod(ptr[43:0],(44'hfffffffe000|{low[6:0],4'b0})<<ptr[`ptr_exp],res[43:0],1'b0,
+  adder #(44) dec_mod(ptr[43:0],(82'h3fffffff8000000000|{low[6:0],ptr[37:0]})<<ptr[`ptr_exp],
+     {res[43:0],dummy2},1'b0,
     B==0 && low[7] != ptr[ptr_on_low],,,,);
-  adder #(44) dec_bmod(ptr[43:0],({32'b0,low[6:0],4'b0})<<ptr[`ptr_exp],res[43:0],1'b0,
+  adder #(44) dec_bmod(ptr[43:0],({32'b0,low[6:0],ptr[37:0]})<<ptr[`ptr_exp]
+     ,{res[43:0],dummy2},1'b0,
     B==0 && low[7] == ptr[ptr_on_low],,,,);
    
 
