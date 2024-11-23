@@ -136,16 +136,17 @@ module addrcalcsec_range(
   input diff,
   output cout_secq);
 
-  wire [7:0] low={ptr[`ptr_low],1'b0};
-  wire [7:0] high={ptr[`ptr_hi],1'b1};
+  wire [7:0] low={ptr[`ptr_low]};
+  wire [7:0] high={ptr[`ptr_hi]};
   //wire diff=ptr[`ptr_hi_less];
   wire hi_pass=diff && ptr[`ptr_on_low]==ptr[12+ptr[`ptr_exp]];
   wire lo_lass=diff && ptr[`ptr_on_low]!=ptr[12+ptr[`ptr_exp]];
   wire [7:0] bits;
   wire cout_low,cout_hio;
 
-  get_carry #(8) cmpLow_mod(~low,bits,1'b1,cout_low);
-  get_carry #(8) cmpHio_mod(high,~bits,1'b1,cout_hio);
+  get_carry #(7) cmpLow_mod(~low,bits[6:0],1'b1,cout_low);
+  get_carry #(7) cmpHio_mod(high,~bits[6:0],1'b1,cout_hio);
   addrcalcsec_shift8  sh_mod(ptr[`ptr_exp],ptr[43:4],bits);
-  assign cout_secq=cin_secq && cout_low|lo_lass && cout_hio|hi_pass && (|low || ~&high);
+  assign cout_secq=cin_secq && cout_low|lo_lass && cout_hio|hi_pass && (|low || ~&high) &&
+    bits!={ptr[`ptr_on_low],low};
 endmodule
