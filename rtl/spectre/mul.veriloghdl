@@ -34,14 +34,17 @@ module addrcalcsec_mul(
   addrcalcsec_shift8 shf_mod(B[11:7],A[43:4],low);
   addrcalcsec_shift8 shf2_mod(B[11:7],BB[43:4],oldhi);
 
-  adder #(7) add_mod(low[7:1],B[6:0],hi,1'b0,1'b1,C,,,);
+  adder #(7) add_mod(low[6:0],B[6:0],hi,1'b0,1'b1,C,,,);
 
-
-  
+  adder #(44) dec_mod(ptr[43:0],(44'hfffffffe000|{low[6:0],4'b0})<<ptr[`ptr_exp],res[43:0],1'b0,
+    B==0 && low[7] != ptr[ptr_on_low],,,,);
+  adder #(44) dec_bmod(ptr[43:0],({32'b0,low[6:0],4'b0})<<ptr[`ptr_exp],res[43:0],1'b0,
+    B==0 && low[7] == ptr[ptr_on_low],,,,);
+   
 
   assign res[`ptr_exp]=(B[11:7]>A[`ptr_exp] && attr[3]) ? 5'b0 : B[11:7];
-  assign res[`ptr_low]=low[7:1];
-  assign res[`ptr_hi]=hi<=oldhi[7:1] ? oldhi[7:1] : hi;
-  assign res[`ptr_on_low]=1'b1;
+  assign res[`ptr_low]=B ? low[6:0] : ptr[`ptr_low];
+  assign res[`ptr_hi]=hi<=oldhi[7:1] || !B ? oldhi[6:0] : hi;
+  assign res[`ptr_on_low]=B ? low[7] : ptr[ptr_on_low];
   assign res[43:0]=A[43:0];
 endmodule
