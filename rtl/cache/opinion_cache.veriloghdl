@@ -418,8 +418,8 @@ module ccRam_way(
   input clk;
   input rst;
   input readA_clkEn;
-  input [IP_WIDTH-6:0] readA_IP;
-  input [3:0] readA_IP_low;
+  input [IP_WIDTH-7:0] readA_IP;
+  input [4:0] readA_IP_low;
   input readA_set_flag;
   output [DATA_WIDTH-1:0] readA_data;
   input [DATA_WIDTH-1:0] readA_data_in;
@@ -430,8 +430,8 @@ module ccRam_way(
   output readA_hit;
   output expun_hit;
   input readB_clkEn;
-  input [IP_WIDTH-6:0] readB_IP;
-  input [3:0] readB_IP_low;
+  input [IP_WIDTH-7:0] readB_IP;
+  input [4:0] readB_IP_low;
   input readB_set_flag;
   output [DATA_WIDTH-1:0] readB_data;
   input [DATA_WIDTH-1:0] readB_data_in;
