@@ -100,9 +100,14 @@ module ccTag(
   rst,
   read_clkEn,
   read_phys_addr,
+  read_phys_low,
+  read_phys_bnk,
+  read_low_pfoff,
+  read_hit_pfoff,
   read_hit,
   read_err,
   write_phys_addr,
+  write_bnk_data,
   write_wen,
   invalidate,
   hitNRU,hitNRU_in,
@@ -180,14 +185,17 @@ module ccTag(
   
   assign tag_paddr=read_data[`cc1Tag_paddr];
   assign tag_valid=read_data[`cc1Tag_valid];
-
+  assign {tag_trh1,tag_low1,tag_trh0,tag_low0}=read_data[`cc1Tag_xtag]>>(16*read_phys_bnk_reg);
   assign read_err=^read_data;
   assign read_hit=tag_valid && tag_paddr==read_phys_addr_reg && ~init && read_clkEn_reg;
-  
+
+  assign read_hit_pfoff=read_hit && ( tag_low0==read_phys_low_reg &~&tag_trh0) | (tag_low1==read_phys_low_reg &~&tag_trh1);
+  assign read_pfoff= tag_low0==read_phys_low_reg &~&tag_trh0 ? tag_trh0 : tag_trh1;
   assign write_data_way=(invalidate_reg | init_reg) ? {DATA_WIDTH{1'B0}} : write_data_new;
   
   assign write_data_new[`cc1Tag_valid]=1'b1;
   assign write_data_new[`cc1Tag_paddr]=write_phys_addr_reg;
+  assign write_data_new[`cc1Tag_xtag]=write_bnk_data_reg;
   assign write_data_new[`cc1Tag_parity]=^write_data_new[DATA_WIDTH-2:0];
 
   assign write_expun_addr=read_dataW[`cc1Tag_paddr] & {37{write_hit}};
