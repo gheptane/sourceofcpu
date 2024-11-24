@@ -177,25 +177,25 @@ module cc_comb (
   assign readB_data0=cc_readB_data0;
   assign readB_dataX0=cc_readB_dataX0;
   
-  assign readA_dataP[0]=~(({260{~readA_hit0A}} | ~readA_data0_reg[DATA_WIDTH/4-1:0]) & readA_dataP[1]); 
-  assign readA_dataP[1]=~(({260{readA_hit1A}} &  readA_data0_reg[DATA_WIDTH/2-1:DATA_WIDTH/4]) | readA_dataP[2]); 
-  assign readA_dataP[2]=~(({260{~readA_hit0B}} | ~readA_data0_reg[DATA_WIDTH/4*3-1:DATA_WIDTH/2]) & readA_dataP[3]); 
-  assign readA_dataP[3]=~(({260{readA_hit1B}} & readA_data0_reg[DATA_WIDTH-1:DATA_WIDTH/4*3])); 
+  assign readA_dataP[0]=~(({520{~readA_hit0A}} | ~readA_data0_reg[DATA_WIDTH/2-1:0]) & readA_dataP[1]); 
+  assign readA_dataP[1]=~(({520{readA_hit1A}} &  readA_data0_reg[DATA_WIDTH*3/4-1:DATA_WIDTH/4]) | readA_dataP[2]); 
+  assign readA_dataP[2]=~(({520{~readA_hit0B}} | ~readA_data0_reg[DATA_WIDTH-1:DATA_WIDTH/2]) & readA_dataP[3]); 
+  assign readA_dataP[3]=~(({520{readA_hit1B}} & readA_data0_reg[DATA_WIDTH*5/4-1:DATA_WIDTH/4*3])); 
   
-  assign readB_dataP[0]=~(({260{~readB_hit0A}} | ~readB_data0_reg[DATA_WIDTH/4-1:0]) & readB_dataP[1]); 
-  assign readB_dataP[1]=~(({260{readB_hit1A}} &  readB_data0_reg[DATA_WIDTH/2-1:DATA_WIDTH/4]) | readB_dataP[2]); 
-  assign readB_dataP[2]=~(({260{~readB_hit0B}} | ~readB_data0_reg[DATA_WIDTH/4*3-1:DATA_WIDTH/2]) & readB_dataP[3]); 
-  assign readB_dataP[3]=~(({260{readB_hit1B}} & readB_data0_reg[DATA_WIDTH-1:DATA_WIDTH/4*3])); 
+  assign readB_dataP[0]=~(({520{~readB_hit0A}} | ~readB_data0_reg[DATA_WIDTH/3-1:0]) & readB_dataP[1]); 
+  assign readB_dataP[1]=~(({520{readB_hit1A}} &  readB_data0_reg[DATA_WIDTH*3/4-1:DATA_WIDTH/4]) | readB_dataP[2]); 
+  assign readB_dataP[2]=~(({520{~readB_hit0B}} | ~readB_data0_reg[DATA_WIDTH-1:DATA_WIDTH/2]) & readB_dataP[3]); 
+  assign readB_dataP[3]=~(({520{readB_hit1B}} & readB_data0_reg[DATA_WIDTH*5/4-1:DATA_WIDTH/4*3])); 
   
-  assign readA_dataXP[0]=~(({15{~readA_hit0A}} | ~readA_dataX0_reg[14:0]) & readA_dataXP[1]); 
-  assign readA_dataXP[1]=~(({15{readA_hit1A}} & readA_dataX0_reg[29:15]) | readA_dataXP[2]); 
-  assign readA_dataXP[2]=~(({15{~readA_hit0B}} | ~readA_dataX0_reg[44:30]) & readA_dataXP[3]); 
-  assign readA_dataXP[3]=~({15{readA_hit1B}} & readA_dataX0_reg[59:45]); 
+  assign readA_dataXP[0]=~(({30{~readA_hit0A}} | ~readA_dataX0_reg[29:0]) & readA_dataXP[1]); 
+  assign readA_dataXP[1]=~(({30{readA_hit1A}} & readA_dataX0_reg[44:15]) | readA_dataXP[2]); 
+  assign readA_dataXP[2]=~(({30{~readA_hit0B}} | ~readA_dataX0_reg[59:30]) & readA_dataXP[3]); 
+  assign readA_dataXP[3]=~({30{readA_hit1B}} & readA_dataX0_reg[74:45]); 
 
-  assign readB_dataXP[0]=~(({15{~readB_hit0A}} | ~readB_dataX0_reg[14:0]) & readB_dataXP[1]); 
-  assign readB_dataXP[1]=~(({15{readB_hit1A}} & readB_dataX0_reg[29:15]) | readB_dataXP[2]); 
-  assign readB_dataXP[2]=~(({15{~readB_hit0B}} | ~readB_dataX0_reg[44:30]) & readB_dataXP[3]); 
-  assign readB_dataXP[3]=~({15{readB_hit1B}} & readB_dataX0_reg[59:45]); 
+  assign readB_dataXP[0]=~(({30{~readB_hit0A}} | ~readB_dataX0_reg[29:0]) & readB_dataXP[1]); 
+  assign readB_dataXP[1]=~(({30{readB_hit1A}} & readB_dataX0_reg[44:15]) | readB_dataXP[2]); 
+  assign readB_dataXP[2]=~(({30{~readB_hit0B}} | ~readB_dataX0_reg[59:30]) & readB_dataXP[3]); 
+  assign readB_dataXP[3]=~({30{readB_hit1B}} & readB_dataX0_reg[74:45]); 
 
 
 
